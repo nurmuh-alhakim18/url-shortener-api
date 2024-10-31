@@ -6,13 +6,13 @@ package repositories
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Url struct {
 	ID             int32
-	ShortUrl       string
+	CustomAlias    string
 	OriginalUrl    string
-	CreatedAt      sql.NullTime
+	CreatedAt      time.Time
 	ExpirationDate sql.NullTime
-	CustomAlias    sql.NullString
 }

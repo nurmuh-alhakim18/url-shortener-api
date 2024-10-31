@@ -10,10 +10,15 @@ import (
 type Config struct {
 	Port        string
 	DatabaseURL string
+	AppURL      string
 }
 
-func LoadConfig() *Config {
-	godotenv.Load(".env")
+func LoadConfig() Config {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Failed to load .env")
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -24,8 +29,14 @@ func LoadConfig() *Config {
 		log.Fatal("DB_URL must be set")
 	}
 
-	return &Config{
+	appURL := os.Getenv("APP_URL")
+	if appURL == "" {
+		log.Fatal("APP_URL must be set")
+	}
+
+	return Config{
 		Port:        port,
 		DatabaseURL: databaseURL,
+		AppURL:      appURL,
 	}
 }

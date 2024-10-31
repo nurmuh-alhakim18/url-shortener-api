@@ -2,11 +2,10 @@
 -- +goose StatementBegin
 CREATE TABLE urls (
     id SERIAL PRIMARY KEY,
-    short_url VARCHAR(10) NOT NULL UNIQUE ,
+    custom_alias VARCHAR(50) NOT NULL UNIQUE,
     original_url TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
-    expiration_date TIMESTAMP,
-    custom_alias VARCHAR(50) UNIQUE
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    expiration_date TIMESTAMP
 );
 -- +goose StatementEnd
 

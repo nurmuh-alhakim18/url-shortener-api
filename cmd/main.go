@@ -11,11 +11,14 @@ import (
 	handlerURL "github.com/nurmuh-alhakim18/url-shortener-api/internal/handlers/url"
 	"github.com/nurmuh-alhakim18/url-shortener-api/internal/repositories"
 	"github.com/nurmuh-alhakim18/url-shortener-api/internal/services/url"
+	"github.com/nurmuh-alhakim18/url-shortener-api/pkg/redis"
 	"github.com/nurmuh-alhakim18/url-shortener-api/router"
 )
 
 func main() {
 	cfg := config.LoadConfig()
+
+	redisClient := redis.NewRedisClient("localhost:6379", "", 0)
 
 	db, err := sql.Open("postgres", cfg.DatabaseURL)
 	if err != nil {
@@ -24,7 +27,7 @@ func main() {
 
 	queries := repositories.New(db)
 
-	urlService := url.NewURLService(queries, cfg)
+	urlService := url.NewURLService(queries, cfg, redisClient)
 
 	urlHandler := handlerURL.NewURLHandler(urlService)
 

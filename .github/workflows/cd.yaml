@@ -9,9 +9,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
-    env:
-      DB_URL: ${{ secrets.DB_URL }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,12 +20,6 @@ jobs:
 
       - name: Create .env file
         run: echo "${{ secrets.ENV_FILE }}" > .env
-
-      - name: Install goose
-        run: go install github.com/pressly/goose/v3/cmd/goose@latest
-
-      - name: Migrate db
-        run: ./scripts/migrate.sh
 
       - name: Authorize GCP
         uses: google-github-actions/auth@v2
@@ -45,6 +36,12 @@ jobs:
 
       - name: Build image
         run: gcloud builds submit --tag gcr.io/${{ secrets.PROJECT_ID }}/url-shortener .
+
+      - name: Install goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
+
+      - name: Migrate db
+        run: ./scripts/migrate.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely \

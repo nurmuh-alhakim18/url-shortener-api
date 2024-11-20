@@ -1,15 +1,7 @@
-FROM golang:1.23.3-alpine
+FROM debian:stable-slim
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y ca-certificates
 
-COPY go.mod go.sum ./
+COPY cmd/url-shortener /usr/bin/url-shortener
 
-RUN go mod tidy
-
-COPY . .
-
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -C cmd -o url-shortener
-
-ENV HOST=0.0.0.0
-
-CMD [ "/app/cmd/url-shortener" ]
+CMD [ "url-shortener" ]

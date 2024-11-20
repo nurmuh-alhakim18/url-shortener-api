@@ -4,4 +4,4 @@ if [ -f .env ]; then
   source .env
 fi
 
-goose -dir sql/schemas turso -allow-missing $DB_URL up
+goose -dir sql/schemas turso $DB_URL up

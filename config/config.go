@@ -16,7 +16,7 @@ type Config struct {
 func LoadConfig() Config {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Failed to load .env")
+		log.Printf("Failed to load .env, assuming default configuration")
 	}
 
 	port := os.Getenv("PORT")

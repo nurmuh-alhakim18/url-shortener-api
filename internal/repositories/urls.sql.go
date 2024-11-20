@@ -14,21 +14,21 @@ const checkCustomAlias = `-- name: CheckCustomAlias :one
 SELECT EXISTS (
   SELECT 1
   FROM urls
-  WHERE custom_alias = $1
+  WHERE custom_alias = ?
 )
 `
 
-func (q *Queries) CheckCustomAlias(ctx context.Context, customAlias string) (bool, error) {
+func (q *Queries) CheckCustomAlias(ctx context.Context, customAlias string) (int64, error) {
 	row := q.db.QueryRowContext(ctx, checkCustomAlias, customAlias)
-	var exists bool
-	err := row.Scan(&exists)
-	return exists, err
+	var column_1 int64
+	err := row.Scan(&column_1)
+	return column_1, err
 }
 
 const createURL = `-- name: CreateURL :one
 INSERT INTO urls (custom_alias, original_url, expiration_date)
 VALUES (
-  $1, $2, $3
+  ?, ?, ?
 )
 RETURNING id, custom_alias, original_url, created_at, expiration_date
 `
@@ -55,7 +55,7 @@ func (q *Queries) CreateURL(ctx context.Context, arg CreateURLParams) (Url, erro
 const getOriginalURL = `-- name: GetOriginalURL :one
 SELECT original_url
 FROM urls
-WHERE custom_alias = $1 AND expiration_date > NOW()
+WHERE custom_alias = ? AND expiration_date > CURRENT_TIMESTAMP
 `
 
 func (q *Queries) GetOriginalURL(ctx context.Context, customAlias string) (string, error) {

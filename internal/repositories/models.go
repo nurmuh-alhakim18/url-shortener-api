@@ -10,7 +10,7 @@ import (
 )
 
 type Url struct {
-	ID             int32
+	ID             int64
 	CustomAlias    string
 	OriginalUrl    string
 	CreatedAt      time.Time

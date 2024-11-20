@@ -14,10 +14,10 @@ import (
 func (s *URLService) ShortenURL(ctx context.Context, originalURL, customAlias string) (string, error) {
 	exist, err := s.queries.CheckCustomAlias(ctx, customAlias)
 	if err != nil {
-		return "", errors.New("failed to check custom alias")
+		return "", err
 	}
 
-	if exist {
+	if exist == 1 {
 		return "", errors.New("custom alias is used")
 	}
 

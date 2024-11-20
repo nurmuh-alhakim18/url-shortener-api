@@ -14,9 +14,9 @@ type MockQueries struct {
 	mock.Mock
 }
 
-func (m *MockQueries) CheckCustomAlias(ctx context.Context, customAlias string) (bool, error) {
+func (m *MockQueries) CheckCustomAlias(ctx context.Context, customAlias string) (int64, error) {
 	args := m.Called(ctx, customAlias)
-	return args.Bool(0), args.Error(1)
+	return int64(args.Int(0)), args.Error(1)
 }
 
 func (m *MockQueries) CreateURL(ctx context.Context, arg repositories.CreateURLParams) (repositories.Url, error) {
@@ -48,7 +48,7 @@ func TestURLService_ShortenURL(t *testing.T) {
 				customAlias: "alias",
 			},
 			mockFn: func(m *MockQueries) {
-				m.On("CheckCustomAlias", mock.Anything, "alias").Return(true, nil)
+				m.On("CheckCustomAlias", mock.Anything, "alias").Return(1, nil)
 			},
 			want:    "",
 			wantErr: true,
@@ -61,7 +61,7 @@ func TestURLService_ShortenURL(t *testing.T) {
 				customAlias: "alias",
 			},
 			mockFn: func(m *MockQueries) {
-				m.On("CheckCustomAlias", mock.Anything, "alias").Return(false, nil)
+				m.On("CheckCustomAlias", mock.Anything, "alias").Return(0, nil)
 				m.On("CreateURL", mock.Anything, mock.AnythingOfType("repositories.CreateURLParams")).Return(repositories.Url{CustomAlias: "alias"}, nil)
 			},
 			want:    "http://localhost:8080/alias",
@@ -75,7 +75,7 @@ func TestURLService_ShortenURL(t *testing.T) {
 				customAlias: "alias",
 			},
 			mockFn: func(m *MockQueries) {
-				m.On("CheckCustomAlias", mock.Anything, "alias").Return(false, nil)
+				m.On("CheckCustomAlias", mock.Anything, "alias").Return(0, nil)
 				m.On("CreateURL", mock.Anything, mock.AnythingOfType("repositories.CreateURLParams")).Return(repositories.Url{CustomAlias: "alias"}, nil)
 			},
 			want:    "http://localhost:8080/alias",

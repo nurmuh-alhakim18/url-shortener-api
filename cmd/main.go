@@ -6,18 +6,18 @@ import (
 	"net/http"
 	"time"
 
-	_ "github.com/lib/pq"
 	"github.com/nurmuh-alhakim18/url-shortener-api/config"
 	handlerURL "github.com/nurmuh-alhakim18/url-shortener-api/internal/handlers/url"
 	"github.com/nurmuh-alhakim18/url-shortener-api/internal/repositories"
 	"github.com/nurmuh-alhakim18/url-shortener-api/internal/services/url"
 	"github.com/nurmuh-alhakim18/url-shortener-api/router"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 func main() {
 	cfg := config.LoadConfig()
 
-	db, err := sql.Open("postgres", cfg.DatabaseURL)
+	db, err := sql.Open("libsql", cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Failed to make connection with db: %v", err)
 	}

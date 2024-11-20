@@ -8,7 +8,7 @@ import (
 )
 
 type urlRepository interface {
-	CheckCustomAlias(ctx context.Context, customAlias string) (bool, error)
+	CheckCustomAlias(ctx context.Context, customAlias string) (int64, error)
 	CreateURL(ctx context.Context, arg repositories.CreateURLParams) (repositories.Url, error)
 	GetOriginalURL(ctx context.Context, customAlias string) (string, error)
 }

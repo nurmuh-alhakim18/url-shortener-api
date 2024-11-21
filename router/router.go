@@ -9,8 +9,8 @@ import (
 func NewRouter(urlHandler *url.URLHandler) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/api/shorten", urlHandler.HandlerShortenURL)
-	mux.HandleFunc("/{alias}", urlHandler.HandlerRedirectURL)
+	mux.HandleFunc("POST /api/shorten", urlHandler.HandlerShortenURL)
+	mux.HandleFunc("GET /{alias}", urlHandler.HandlerRedirectURL)
 
 	return mux
 }

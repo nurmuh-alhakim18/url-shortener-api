@@ -18,8 +18,11 @@ jobs:
         with:
           go-version: "1.23.0"
 
-      - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Create env file
+        run: echo "${{ secrets.ENV_FILE }}" > env.yaml
+
+      - name: Build Go binary for prod
+        run: CGO_ENABLED=0 GOOS=linux go build -C cmd -o url-shortener
 
       - name: Authorize GCP
         uses: google-github-actions/auth@v2
@@ -45,8 +48,9 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy url-shortener \
-          --image gcr.io/${{ secrets.PROJECT_ID }}/url-shortener \
-          --region asia-southeast2 \
-          --platform managed \
+          --image=gcr.io/${{ secrets.PROJECT_ID }}/url-shortener \
+          --region=asia-southeast2 \
+          --platform=managed \
           --max-instances=4 \
+          --env-vars-file=env.yaml \
           --allow-unauthenticated

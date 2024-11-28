@@ -10,7 +10,7 @@ import (
 func NewRouter(urlHandler *url.URLHandler) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
 		utils.Response(w, http.StatusOK, "OK")
 	})
 

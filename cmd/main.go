@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/nurmuh-alhakim18/gocache/cache"
 	"github.com/nurmuh-alhakim18/url-shortener-api/config"
 	handlerURL "github.com/nurmuh-alhakim18/url-shortener-api/internal/handlers/url"
 	"github.com/nurmuh-alhakim18/url-shortener-api/internal/repositories"
@@ -17,6 +18,8 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 
+	cache := cache.NewCache(10)
+
 	db, err := sql.Open("libsql", cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Failed to make connection with db: %v", err)
@@ -24,7 +27,7 @@ func main() {
 
 	queries := repositories.New(db)
 
-	urlService := url.NewURLService(queries, cfg)
+	urlService := url.NewURLService(queries, cfg, cache)
 
 	urlHandler := handlerURL.NewURLHandler(urlService)
 
